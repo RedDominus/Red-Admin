@@ -61,7 +61,7 @@ end
 
 -- Base GUI elements
 local ScreenGui = Instance.new("ScreenGui")
-local frame = Instance.new("Frame")
+local mainFrame = Instance.new("Frame")
 local executeButton = Instance.new("TextButton")
 local titleLabel = Instance.new("TextLabel")
 local dropDown = Instance.new("TextButton")
@@ -72,14 +72,30 @@ local flyUpButton = Instance.new("TextButton")
 local flyDownButton = Instance.new("TextButton")
 local unflyButton = Instance.new("TextButton")
 local closeFlightButton = Instance.new("TextButton")
+local otherScriptsFrame = Instance.new("Frame")
+local betterBypasserButton = Instance.new("TextButton")
+local changealogButton = Instance.new("TextButton")
+local changealogFrame = Instance.new("Frame")
+local changealogLabel = Instance.new("TextLabel")
+local changealogCloseButton = Instance.new("TextButton")
+
+local commands = {
+    "Kill All",
+    "Go To The Void",
+    "Fly",
+    "Rejoin",
+    "Serverhop",
+    "Other Scripts"
+}
+local selectedCommand = "Select Command"
 local flying = false
 local bodyVelocity
 
 -- Properties for Main Frame
-frame.Size = UDim2.new(0.4, 0, 0.4, 0)
-frame.Position = UDim2.new(0.3, 0, 0.3, 0)
-frame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-frame.Visible = false
+mainFrame.Size = UDim2.new(0.4, 0, 0.4, 0)
+mainFrame.Position = UDim2.new(0.3, 0, 0.3, 0)
+mainFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+mainFrame.Visible = false
 
 -- Properties for Title
 titleLabel.Size = UDim2.new(1, 0, 0.2, 0)
@@ -109,9 +125,6 @@ openButton.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
 openButton.Text = "Open"
 
 -- Dropdown Setup
-local commands = {"Kill All", "Go To The Void", "Fly", "Rejoin", "Serverhop"}
-local selectedCommand = "Select Command"
-
 dropDown.Size = UDim2.new(0.5, 0, 0.1, 0)
 dropDown.Position = UDim2.new(0.1, 0, 0.5, 0)
 dropDown.BackgroundColor3 = Color3.fromRGB(200, 200, 0)
@@ -146,6 +159,43 @@ unflyButton.Size = UDim2.new(0.4, 0, 0.3, 0)
 unflyButton.Position = UDim2.new(0.5, 0, 0.8, 0)
 unflyButton.BackgroundColor3 = Color3.fromRGB(200, 200, 0)
 unflyButton.Text = "Unfly"
+
+-- Other Scripts Frame
+otherScriptsFrame.Size = UDim2.new(0.5, 0, 0.3, 0)
+otherScriptsFrame.Position = UDim2.new(0.25, 0, 0.25, 0)
+otherScriptsFrame.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+otherScriptsFrame.Visible = false
+
+-- BetterBypasser Button
+betterBypasserButton.Size = UDim2.new(0.8, 0, 0.2, 0)
+betterBypasserButton.Position = UDim2.new(0.1, 0, 0.1, 0)
+betterBypasserButton.BackgroundColor3 = Color3.fromRGB(0, 200, 200)
+betterBypasserButton.Text = "Load BetterBypasser"
+
+-- Changealog Button
+changealogButton.Size = UDim2.new(0.2, 0, 0.1, 0)
+changealogButton.Position = UDim2.new(0.7, 0, 0.4, 0)
+changealogButton.BackgroundColor3 = Color3.fromRGB(0, 0, 255)
+changealogButton.Text = "Changealog"
+
+-- Changealog Frame
+changealogFrame.Size = UDim2.new(0.4, 0, 0.3, 0)
+changealogFrame.Position = UDim2.new(0.3, 0, 0.35, 0)
+changealogFrame.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+changealogFrame.Visible = false
+
+-- Changealog Label
+changealogLabel.Size = UDim2.new(1, 0, 0.2, 0)
+changealogLabel.Position = UDim2.new(0, 0, 0, 0)
+changealogLabel.BackgroundColor3 = Color3.fromRGB(150, 150, 150)
+changealogLabel.Text = "Changealog:\n- Added Changealog\n- Added new Command"
+changealogLabel.TextScaled = true
+
+-- Changealog Close Button
+changealogCloseButton.Size = UDim2.new(0.1, 0, 0.1, 0)
+changealogCloseButton.Position = UDim2.new(0.8, 0, 0, 0)
+changealogCloseButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+changealogCloseButton.Text = "Close"
 
 -- Command functions
 local function killAll()
@@ -217,7 +267,19 @@ local function serverhop()
     end
 end
 
--- Handle button click
+-- Load BetterBypasser
+betterBypasserButton.MouseButton1Click:Connect(function()
+    loadstring(game:HttpGet("https://rawscripts.net/raw/The-Strongest-Battlegrounds-BetterBypasser-Chat-Bypass-AI-ChatBot-Hub-22691"))()
+end)
+
+-- Open Other Scripts Frame
+dropDown.MouseButton1Click:Connect(function()
+    selectedCommand = "Other Scripts"
+    dropDown.Text = selectedCommand
+    otherScriptsFrame.Visible = true
+end)
+
+-- Handle button click for Execute
 executeButton.MouseButton1Click:Connect(function()
     if selectedCommand == "Kill All" then
         killAll()
@@ -240,12 +302,12 @@ end)
 
 -- Close functionality for the main frame
 closeButton.MouseButton1Click:Connect(function()
-    frame.Visible = false
+    mainFrame.Visible = false
 end)
 
 -- Open button functionality
 openButton.MouseButton1Click:Connect(function()
-    frame.Visible = true
+    mainFrame.Visible = true
 end)
 
 -- Close functionality for the flight frame
@@ -253,12 +315,22 @@ closeFlightButton.MouseButton1Click:Connect(function()
     flightFrame.Visible = false
 end)
 
+-- Close functionality for Changealog Frame
+changealogCloseButton.MouseButton1Click:Connect(function()
+    changealogFrame.Visible = false
+end)
+
+-- Open Changealog Frame
+changealogButton.MouseButton1Click:Connect(function()
+    changealogFrame.Visible = true
+end)
+
 -- Finalize GUI
-frame.Parent = ScreenGui
-titleLabel.Parent = frame
-executeButton.Parent = frame
-dropDown.Parent = frame
-closeButton.Parent = frame
+mainFrame.Parent = ScreenGui
+titleLabel.Parent = mainFrame
+executeButton.Parent = mainFrame
+dropDown.Parent = mainFrame
+closeButton.Parent = mainFrame
 
 flightFrame.Parent = ScreenGui
 flyUpButton.Parent = flightFrame
@@ -266,15 +338,24 @@ flyDownButton.Parent = flightFrame
 unflyButton.Parent = flightFrame
 closeFlightButton.Parent = flightFrame
 
+otherScriptsFrame.Parent = ScreenGui
+betterBypasserButton.Parent = otherScriptsFrame
+
+changealogFrame.Parent = ScreenGui
+changealogLabel.Parent = changealogFrame
+changealogCloseButton.Parent = changealogFrame
+
 -- Open button parent
 openButton.Parent = ScreenGui
 
 -- Make the frames draggable
-makeDraggable(frame)
+makeDraggable(mainFrame)
 makeDraggable(flightFrame)
+makeDraggable(otherScriptsFrame)
+makeDraggable(changealogFrame)
 
 -- Hide the main frame initially
-frame.Visible = false
+mainFrame.Visible = false
 
 -- Finalize ScreenGui
-ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui
